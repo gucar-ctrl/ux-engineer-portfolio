@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import Nav from "@/components/nav";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" className={`${roboto.variable} h-full`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+          <Nav />
+          {children}
+        </body>
     </html>
   );
 }

@@ -60,3 +60,48 @@ body {
   font-family: var(--font-roboto), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ─── M3 State Layer ─── */
+/* Applica questa classe a qualsiasi elemento interattivo (link, button, card).
+   Lo state layer è un overlay semitrasparente che comunica hover, focus e press
+   seguendo le specifiche Material Design 3. */
+.md-interactive {
+  position: relative;
+  overflow: hidden;
+  transition:
+    background-color var(--md-duration-short) var(--md-easing-standard),
+    color var(--md-duration-short) var(--md-easing-standard);
+}
+
+.md-interactive::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--md-on-surface);
+  opacity: 0;
+  transition: opacity var(--md-duration-short) var(--md-easing-standard);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.md-interactive:hover::after {
+  opacity: 0.08;
+}
+
+.md-interactive:active::after {
+  opacity: 0.12;
+}
+
+.md-interactive:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+.md-interactive:focus-visible::after {
+  opacity: 0.12;
+}
+
+/* Variante per elementi su sfondo primario (es. bottoni filled) */
+.md-interactive-primary::after {
+  background-color: var(--md-on-primary);
+}
