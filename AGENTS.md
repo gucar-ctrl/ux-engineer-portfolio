@@ -21,6 +21,12 @@ Tutto il contenuto visibile del sito (testi, label, placeholder, messaggi di err
 ## Accessibilità
 Ogni scelta stilistica, interazione e contenuto deve rispettare i principi WCAG 2.2 livello AA. Questo include: contrasto minimo 4.5:1 per testo normale e 3:1 per testo grande, touch target minimi 44×44px, focus visibile su tutti gli elementi interattivi, struttura heading corretta (h1→h2→h3), testo alternativo per immagini, etichette ARIA dove necessario, e skip-to-content link in ogni pagina. Prima di fare commit verificare sempre la conformità AA.
 
+## UX Reviewer — analisi AS IS / TO BE
+Quando l'immagine caricata contiene sia uno stato AS IS che uno stato TO BE:
+- Le specifiche (UI Update e Screen Reader) devono essere scritte **esclusivamente per il TO BE**
+- L'AS IS serve solo come riferimento per capire cosa è cambiato e scrivere spec più precise
+- Non produrre spec per l'AS IS — non è lo stato target
+
 ## Micro-interazioni e stati interattivi (Material Design 3)
 Ogni elemento interattivo (link, bottone, card cliccabile) deve avere stati visibili seguendo le specifiche M3:
 - Hover: state layer con opacità 8% sul colore `on-surface` o `primary`

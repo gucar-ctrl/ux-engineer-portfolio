@@ -12,6 +12,7 @@ GENERAL RULES:
 - Do not quote WCAG guideline references (e.g. do not write "WCAG 1.3.3")
 - Do not split information about the same element across multiple points — consolidate into a single point
 - Flag any typos found in the UI copy directly in the UI UPDATE list
+- If the image contains both an AS IS and a TO BE state: write all specs (UI Update and Screen Reader) exclusively for the TO BE state. Use the AS IS only as reference to understand what changed and produce more accurate specs. Do not produce specs for the AS IS state.
 
 OUTPUT 1 — UI UPDATE:
 A numbered list of imperative instructions written for a developer. Cover all relevant issues found across these categories:
@@ -62,7 +63,7 @@ Rules for screen reader items:
 
 export async function POST(request: NextRequest) {
   try {
-    const { imageBase64, mediaType } = await request.json();
+    const { imageBase64, mediaType, model } = await request.json();
 
     if (!imageBase64 || !mediaType) {
       return NextResponse.json(
@@ -71,8 +72,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const ALLOWED_MODELS = ["claude-sonnet-4-5", "claude-haiku-4-5-20251001"];
+    const selectedModel = ALLOWED_MODELS.includes(model) ? model : "claude-sonnet-4-5";
+
     const response = await client.messages.create({
-      model: "claude-sonnet-4-5",
+      model: selectedModel,
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
       messages: [
@@ -99,7 +103,10 @@ export async function POST(request: NextRequest) {
     const text = response.content[0].type === "text" ? response.content[0].text : "";
     let analysis;
     try {
-      analysis = JSON.parse(text);
+      // Estrai solo il blocco JSON dalla risposta, ignorando eventuale testo extra
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error("No JSON found in response.");
+      analysis = JSON.parse(jsonMatch[0]);
     } catch {
       console.error("JSON parse failed. Raw response:", text);
       throw new Error("Invalid JSON response from Claude.");
