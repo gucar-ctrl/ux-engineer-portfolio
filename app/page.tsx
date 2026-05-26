@@ -3,21 +3,21 @@ import Link from "next/link";
 const projects = [
   {
     title: "UX Reviewer",
-    description: "Strumento AI che analizza screenshot di interfacce e restituisce feedback di usabilità strutturato.",
+    description: "An AI tool that analyzes UI screenshots and returns structured usability feedback.",
     type: "AI + UX",
     href: "/tools/ux-reviewer",
     comingSoon: false,
   },
   {
     title: "Design System Explorer",
-    description: "Libreria di componenti interattiva con varianti, stati e token documentati.",
+    description: "An interactive component library with documented variants, states, and design tokens.",
     type: "Design Systems",
     href: null,
     comingSoon: true,
   },
   {
     title: "Portfolio",
-    description: "Questo portfolio — costruito con Next.js, Tailwind e Material Design 3.",
+    description: "This portfolio — built with Next.js, Tailwind, and Material Design 3.",
     type: "Motion + Code",
     href: null,
     comingSoon: true,
@@ -30,7 +30,6 @@ export default function Home() {
       className="flex min-h-screen flex-col"
       style={{ backgroundColor: "var(--md-background)", color: "var(--md-on-background)" }}
     >
-      {/* Hero — pt-16 per non finire sotto la nav fissa */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 pt-16">
         <main id="main-content" className="flex flex-col items-center gap-4 text-center" tabIndex={-1}>
           <h1
@@ -39,16 +38,12 @@ export default function Home() {
           >
             Hello, I&apos;m Gabriele — UX Engineer
           </h1>
-          <p
-            className="max-w-md text-lg"
-            style={{ color: "var(--md-on-surface-variant)" }}
-          >
+          <p className="max-w-md text-lg" style={{ color: "var(--md-on-surface-variant)" }}>
             Building interfaces with design and AI
           </p>
         </main>
       </div>
 
-      {/* Projects */}
       <section
         aria-labelledby="selected-work-heading"
         className="w-full max-w-5xl self-center px-6 pb-24 pt-8"
@@ -68,9 +63,7 @@ export default function Home() {
                 style={{
                   backgroundColor: "var(--md-surface-container)",
                   borderRadius: "var(--md-shape-xl)",
-                  border: project.comingSoon
-                    ? "1.5px dashed var(--md-outline)"
-                    : "1.5px solid transparent",
+                  border: project.comingSoon ? "1.5px dashed var(--md-outline)" : "1.5px solid transparent",
                   cursor: project.comingSoon ? "default" : "pointer",
                 }}
               >
@@ -98,32 +91,21 @@ export default function Home() {
                     </span>
                   )}
                 </div>
-                <h3
-                  className="text-lg font-medium"
-                  style={{ color: "var(--md-on-surface)" }}
-                >
+                <h3 className="text-lg font-medium" style={{ color: "var(--md-on-surface)" }}>
                   {project.title}
                 </h3>
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "var(--md-on-surface-variant)" }}
-                >
+                <p className="text-sm leading-relaxed" style={{ color: "var(--md-on-surface-variant)" }}>
                   {project.description}
                 </p>
               </div>
             );
 
             return project.href ? (
-              <Link
-                key={project.title}
-                href={project.href}
-                aria-label={`Apri progetto: ${project.title}`}
-                className="flex"
-              >
+              <Link key={project.title} href={project.href} aria-label={`Open project: ${project.title}`} className="flex">
                 {card}
               </Link>
             ) : (
-              <div key={project.title} aria-label={`${project.title} — prossimamente`} role="article">
+              <div key={project.title} aria-label={`${project.title} — coming soon`} role="article">
                 {card}
               </div>
             );

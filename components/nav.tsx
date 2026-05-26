@@ -15,12 +15,9 @@ export default function Nav() {
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-full focus:text-sm focus:font-medium"
-        style={{
-          backgroundColor: "var(--md-primary)",
-          color: "var(--md-on-primary)",
-        }}
+        style={{ backgroundColor: "var(--md-primary)", color: "var(--md-on-primary)" }}
       >
-        Vai al contenuto principale
+        Skip to main content
       </a>
 
       <header
@@ -29,7 +26,6 @@ export default function Nav() {
       >
         <div className="flex items-center px-6" style={{ minHeight: "64px" }}>
 
-          {/* Logo — aria-label per screen reader, WCAG 2.4.6 */}
           <Link
             href="/"
             aria-label="Home — Gabriele Ucar"
@@ -44,8 +40,7 @@ export default function Nav() {
             GU
           </Link>
 
-          {/* Nav desktop — centrata */}
-          <nav aria-label="Navigazione principale" className="hidden md:flex flex-1 justify-center">
+          <nav aria-label="Main navigation" className="hidden md:flex flex-1 justify-center">
             <ul className="flex items-center gap-1" role="list">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
@@ -56,12 +51,8 @@ export default function Nav() {
                       aria-current={isActive ? "page" : undefined}
                       className="md-interactive flex items-center rounded-full px-4 text-sm font-medium"
                       style={{
-                        backgroundColor: isActive
-                          ? "var(--md-primary-container)"
-                          : "transparent",
-                        color: isActive
-                          ? "var(--md-on-primary-container)"
-                          : "var(--md-on-surface-variant)",
+                        backgroundColor: isActive ? "var(--md-primary-container)" : "transparent",
+                        color: isActive ? "var(--md-on-primary-container)" : "var(--md-on-surface-variant)",
                         borderRadius: "var(--md-shape-full)",
                         minHeight: "44px",
                       }}
@@ -74,48 +65,24 @@ export default function Nav() {
             </ul>
           </nav>
 
-          {/* Hamburger — touch target 44×44px, WCAG 2.5.5 */}
           <button
             className="md-interactive flex md:hidden items-center justify-center ml-auto rounded-full"
             onClick={() => setOpen(!open)}
-            aria-label={open ? "Chiudi menu" : "Apri menu"}
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            style={{
-              minWidth: "44px",
-              minHeight: "44px",
-              borderRadius: "var(--md-shape-full)",
-            }}
+            style={{ minWidth: "44px", minHeight: "44px", borderRadius: "var(--md-shape-full)" }}
           >
             <span className="flex flex-col gap-1.5" aria-hidden="true">
-              <span
-                className="block h-0.5 w-5 transition-all duration-300"
-                style={{
-                  backgroundColor: "var(--md-on-surface)",
-                  transform: open ? "translateY(8px) rotate(45deg)" : "none",
-                }}
-              />
-              <span
-                className="block h-0.5 w-5 transition-all duration-300"
-                style={{
-                  backgroundColor: "var(--md-on-surface)",
-                  opacity: open ? 0 : 1,
-                }}
-              />
-              <span
-                className="block h-0.5 w-5 transition-all duration-300"
-                style={{
-                  backgroundColor: "var(--md-on-surface)",
-                  transform: open ? "translateY(-8px) rotate(-45deg)" : "none",
-                }}
-              />
+              <span className="block h-0.5 w-5 transition-all duration-300" style={{ backgroundColor: "var(--md-on-surface)", transform: open ? "translateY(8px) rotate(45deg)" : "none" }} />
+              <span className="block h-0.5 w-5 transition-all duration-300" style={{ backgroundColor: "var(--md-on-surface)", opacity: open ? 0 : 1 }} />
+              <span className="block h-0.5 w-5 transition-all duration-300" style={{ backgroundColor: "var(--md-on-surface)", transform: open ? "translateY(-8px) rotate(-45deg)" : "none" }} />
             </span>
           </button>
         </div>
 
-        {/* Menu mobile */}
         {open && (
-          <nav id="mobile-menu" aria-label="Navigazione mobile" className="md:hidden px-4 pb-4">
+          <nav id="mobile-menu" aria-label="Mobile navigation" className="md:hidden px-4 pb-4">
             <ul className="flex flex-col gap-1" role="list">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
@@ -127,12 +94,8 @@ export default function Nav() {
                       aria-current={isActive ? "page" : undefined}
                       className="md-interactive flex items-center px-4 text-sm font-medium"
                       style={{
-                        backgroundColor: isActive
-                          ? "var(--md-primary-container)"
-                          : "transparent",
-                        color: isActive
-                          ? "var(--md-on-primary-container)"
-                          : "var(--md-on-surface-variant)",
+                        backgroundColor: isActive ? "var(--md-primary-container)" : "transparent",
+                        color: isActive ? "var(--md-on-primary-container)" : "var(--md-on-surface-variant)",
                         borderRadius: "var(--md-shape-lg)",
                         minHeight: "44px",
                       }}

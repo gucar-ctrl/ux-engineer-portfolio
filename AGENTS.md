@@ -12,6 +12,12 @@ Ogni volta che viene creata una nuova pagina (nuovo `page.tsx` in qualsiasi rout
 ## Decisioni di design e comportamento
 Prima di apportare qualsiasi modifica che non sia stata esplicitamente specificata (layout, posizione elementi, comportamento componenti, scelte visive), chiedi sempre conferma all'utente. Non interpretare in autonomia — meglio chiedere.
 
+## Decisioni tecniche con impatto su costi o architettura
+Prima di scegliere autonomamente modelli AI (es. quale versione di Claude usare), servizi esterni, piani di pricing, limiti di token, o qualsiasi configurazione che abbia impatto economico o architetturale, informare l'utente e chiedere conferma. L'utente deve avere il controllo su queste scelte.
+
+## Lingua
+Tutto il contenuto visibile del sito (testi, label, placeholder, messaggi di errore, bottoni) deve essere in inglese. Fanno eccezione solo i commenti nel codice e le comunicazioni interne al progetto.
+
 ## Accessibilità
 Ogni scelta stilistica, interazione e contenuto deve rispettare i principi WCAG 2.2 livello AA. Questo include: contrasto minimo 4.5:1 per testo normale e 3:1 per testo grande, touch target minimi 44×44px, focus visibile su tutti gli elementi interattivi, struttura heading corretta (h1→h2→h3), testo alternativo per immagini, etichette ARIA dove necessario, e skip-to-content link in ogni pagina. Prima di fare commit verificare sempre la conformità AA.
 
