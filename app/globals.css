@@ -1,26 +1,62 @@
 @import "tailwindcss";
 
+/* ─── M3 Violet — Dark scheme (default) ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colori primari */
+  --md-primary:            #D0BCFF;
+  --md-on-primary:         #381E72;
+  --md-primary-container:  #4F378B;
+  --md-on-primary-container: #EADDFF;
+
+  /* Colori secondari */
+  --md-secondary:          #CCC2DC;
+  --md-on-secondary:       #332D41;
+  --md-secondary-container:#4A4458;
+  --md-on-secondary-container: #E8DEF8;
+
+  /* Superficie e sfondo */
+  --md-background:         #1C1B1F;
+  --md-on-background:      #E6E1E5;
+  --md-surface:            #1C1B1F;
+  --md-on-surface:         #E6E1E5;
+  --md-surface-variant:    #49454F;
+  --md-on-surface-variant: #CAC4D0;
+  --md-surface-container:  #211F26;
+  --md-surface-container-high: #2B2930;
+
+  /* Outline e errore */
+  --md-outline:            #938F99;
+  --md-outline-variant:    #49454F;
+  --md-error:              #F2B8B5;
+  --md-on-error:           #601410;
+
+  /* Shape (border-radius) */
+  --md-shape-xs:   4px;
+  --md-shape-sm:   8px;
+  --md-shape-md:   12px;
+  --md-shape-lg:   16px;
+  --md-shape-xl:   28px;
+  --md-shape-full: 9999px;
+
+  /* Motion — easing curves M3 */
+  --md-easing-emphasized:   cubic-bezier(0.2, 0, 0, 1.0);
+  --md-easing-standard:     cubic-bezier(0.2, 0, 0, 1.0);
+  --md-easing-decelerate:   cubic-bezier(0.05, 0.7, 0.1, 1.0);
+  --md-easing-accelerate:   cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* Duration tokens M3 */
+  --md-duration-short:   200ms;
+  --md-duration-medium:  300ms;
+  --md-duration-long:    500ms;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-roboto);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--md-background);
+  color: var(--md-on-background);
+  font-family: var(--font-roboto), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
