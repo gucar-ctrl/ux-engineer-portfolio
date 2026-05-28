@@ -32,7 +32,7 @@ export default function Nav() {
           <Link
             href="/"
             aria-label="Home — Gabriele Ucar, UX Technologist"
-            className="md-interactive flex items-center justify-center rounded-full text-sm font-medium tracking-wide"
+            className="md-interactive flex items-center gap-2 rounded-full text-sm font-medium tracking-wide px-2"
             style={{
               color: "var(--md-on-surface)",
               minWidth: "44px",
@@ -41,6 +41,18 @@ export default function Nav() {
             }}
           >
             GU
+            <span
+              className="text-xs font-medium px-1.5 py-0.5"
+              style={{
+                backgroundColor: "var(--md-primary-container)",
+                color: "var(--md-on-primary-container)",
+                borderRadius: "var(--md-shape-xs)",
+                letterSpacing: "0.02em",
+                lineHeight: 1,
+              }}
+            >
+              beta
+            </span>
           </Link>
 
           <nav aria-label="Main navigation" className="hidden md:flex flex-1 justify-center">

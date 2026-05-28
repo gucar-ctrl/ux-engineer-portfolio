@@ -111,7 +111,19 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease, delay: 0.55 }}
           >
-            Building interfaces with design and AI
+            A live lab for{" "}
+            <span style={{ color: "var(--md-primary)", fontWeight: 500 }}>design systems</span>
+            {", "}
+            <span style={{ color: "var(--md-primary)", fontWeight: 500 }}>interaction design</span>
+            {", and "}
+            <span style={{ color: "var(--md-primary)", fontWeight: 500 }}>generative AI</span>
+            {" — prototyped with "}
+            <span style={{ color: "var(--md-on-surface)", fontWeight: 500 }}>React</span>
+            {", "}
+            <span style={{ color: "var(--md-on-surface)", fontWeight: 500 }}>Framer Motion</span>
+            {", and the "}
+            <span style={{ color: "var(--md-on-surface)", fontWeight: 500 }}>Claude API</span>
+            {"."}
           </motion.p>
         </main>
       </div>
