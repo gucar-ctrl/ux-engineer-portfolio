@@ -94,35 +94,35 @@ export default function Home() {
   return (
     <div
       className="flex min-h-screen flex-col"
-      style={{ backgroundColor: "var(--md-background)", color: "var(--md-on-background)" }}
+      style={{ background: "linear-gradient(135deg, #2A1FA8 0%, #5B21B6 50%, #7C3AED 100%)", color: "var(--md-on-background)" }}
     >
       <div className="flex flex-1 flex-col items-center justify-center px-6 pt-16">
         <main id="main-content" className="flex flex-col items-center gap-4 text-center" tabIndex={-1}>
           <h1
             className="text-4xl font-light tracking-tight sm:text-6xl"
-            style={{ color: "var(--md-on-background)", minHeight: "1.2em" }}
+            style={{ color: "#FFFFFF", minHeight: "1.2em" }}
           >
             <TypewriterText text="Hello, I'm Gabriele — UX Technologist" startDelay={0.3} />
           </h1>
           <motion.p
             className="max-w-md text-lg"
-            style={{ color: "var(--md-on-surface-variant)" }}
+            style={{ color: "rgba(255,255,255,0.75)" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease, delay: 0.55 }}
           >
             A live lab for{" "}
-            <span style={{ color: "var(--md-primary)", fontWeight: 500 }}>design systems</span>
+            <span style={{ color: "#FFFFFF", fontWeight: 600 }}>design systems</span>
             {", "}
-            <span style={{ color: "var(--md-primary)", fontWeight: 500 }}>interaction design</span>
+            <span style={{ color: "#FFFFFF", fontWeight: 600 }}>interaction design</span>
             {", and "}
-            <span style={{ color: "var(--md-primary)", fontWeight: 500 }}>generative AI</span>
+            <span style={{ color: "#FFFFFF", fontWeight: 600 }}>generative AI</span>
             {" — prototyped with "}
-            <span style={{ color: "var(--md-on-surface)", fontWeight: 500 }}>React</span>
+            <span style={{ color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>React</span>
             {", "}
-            <span style={{ color: "var(--md-on-surface)", fontWeight: 500 }}>Framer Motion</span>
+            <span style={{ color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>Framer Motion</span>
             {", and the "}
-            <span style={{ color: "var(--md-on-surface)", fontWeight: 500 }}>Claude API</span>
+            <span style={{ color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>Claude API</span>
             {"."}
           </motion.p>
         </main>
@@ -138,9 +138,11 @@ export default function Home() {
               <motion.div
                 className={`flex flex-col gap-4 p-6 h-full ${!project.comingSoon ? "md-interactive" : ""}`}
                 style={{
-                  backgroundColor: "var(--md-surface-container)",
+                  background: "rgba(8, 6, 20, 0.55)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
                   borderRadius: "var(--md-shape-xl)",
-                  border: project.comingSoon ? "1.5px dashed var(--md-outline)" : "1.5px solid transparent",
+                  border: project.comingSoon ? "1.5px dashed rgba(255,255,255,0.18)" : "1.5px solid rgba(255,255,255,0.10)",
                   cursor: project.comingSoon ? "default" : "pointer",
                 }}
                 initial={{ opacity: 0, y: 28 }}
@@ -172,10 +174,10 @@ export default function Home() {
                     </span>
                   )}
                 </div>
-                <h3 className="text-lg font-medium" style={{ color: "var(--md-on-surface)" }}>
+                <h3 className="text-lg font-medium" style={{ color: "#FFFFFF" }}>
                   {project.title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--md-on-surface-variant)" }}>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.65)" }}>
                   {project.description}
                 </p>
               </motion.div>
