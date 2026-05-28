@@ -120,18 +120,7 @@ export default function Home() {
         aria-labelledby="selected-work-heading"
         className="w-full max-w-5xl self-center px-6 pb-24 pt-8"
       >
-        <motion.h2
-          id="selected-work-heading"
-          className="mb-8 text-sm font-medium tracking-widest uppercase"
-          style={{ color: "var(--md-on-surface-variant)" }}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease, delay: 0.45 }}
-        >
-          Selected Work
-        </motion.h2>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {projects.map((project, i) => {
             const card = (
               <motion.div
