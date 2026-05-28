@@ -5,6 +5,9 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { navLinks } from "@/lib/nav";
 
+const identityLinks = navLinks.filter((l) => l.group === "identity");
+const workLinks = navLinks.filter((l) => l.group === "work");
+
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -28,7 +31,7 @@ export default function Nav() {
 
           <Link
             href="/"
-            aria-label="Home — Gabriele Ucar"
+            aria-label="Home — Gabriele Ucar, UX Technologist"
             className="md-interactive flex items-center justify-center rounded-full text-sm font-medium tracking-wide"
             style={{
               color: "var(--md-on-surface)",
@@ -42,19 +45,47 @@ export default function Nav() {
 
           <nav aria-label="Main navigation" className="hidden md:flex flex-1 justify-center">
             <ul className="flex items-center gap-1" role="list">
-              {navLinks.map((link) => {
+              {/* Identity group: Home + About */}
+              {identityLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <li key={link.href}>
                     <Link
                       href={link.href}
                       aria-current={isActive ? "page" : undefined}
-                      className="md-interactive flex items-center rounded-full px-4 text-sm font-medium"
+                      className="md-interactive flex items-center px-4 text-sm font-medium"
+                      style={{
+                        backgroundColor: isActive ? "var(--md-primary-container)" : "transparent",
+                        color: isActive ? "var(--md-on-primary-container)" : "var(--md-on-surface)",
+                        borderRadius: "var(--md-shape-full)",
+                        minHeight: "44px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
+
+              {/* Separator */}
+              <li aria-hidden="true" style={{ width: 1, height: 20, backgroundColor: "var(--md-outline-variant)", margin: "0 4px", flexShrink: 0 }} />
+
+              {/* Work group: projects */}
+              {workLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      aria-current={isActive ? "page" : undefined}
+                      className="md-interactive flex items-center px-4 text-sm font-medium"
                       style={{
                         backgroundColor: isActive ? "var(--md-primary-container)" : "transparent",
                         color: isActive ? "var(--md-on-primary-container)" : "var(--md-on-surface-variant)",
                         borderRadius: "var(--md-shape-full)",
                         minHeight: "44px",
+                        fontWeight: 400,
                       }}
                     >
                       {link.label}
@@ -84,7 +115,30 @@ export default function Nav() {
         {open && (
           <nav id="mobile-menu" aria-label="Mobile navigation" className="md:hidden px-4 pb-4">
             <ul className="flex flex-col gap-1" role="list">
-              {navLinks.map((link) => {
+              {identityLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      aria-current={isActive ? "page" : undefined}
+                      className="md-interactive flex items-center px-4 text-sm font-medium"
+                      style={{
+                        backgroundColor: isActive ? "var(--md-primary-container)" : "transparent",
+                        color: isActive ? "var(--md-on-primary-container)" : "var(--md-on-surface)",
+                        borderRadius: "var(--md-shape-lg)",
+                        minHeight: "44px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
+              <li aria-hidden="true" style={{ height: 1, backgroundColor: "var(--md-outline-variant)", margin: "4px 0" }} />
+              {workLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <li key={link.href}>
@@ -98,6 +152,7 @@ export default function Nav() {
                         color: isActive ? "var(--md-on-primary-container)" : "var(--md-on-surface-variant)",
                         borderRadius: "var(--md-shape-lg)",
                         minHeight: "44px",
+                        fontWeight: 400,
                       }}
                     >
                       {link.label}

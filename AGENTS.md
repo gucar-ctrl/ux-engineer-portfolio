@@ -21,6 +21,13 @@ Tutto il contenuto visibile del sito (testi, label, placeholder, messaggi di err
 ## Accessibilità
 Ogni scelta stilistica, interazione e contenuto deve rispettare i principi WCAG 2.2 livello AA. Questo include: contrasto minimo 4.5:1 per testo normale e 3:1 per testo grande, touch target minimi 44×44px, focus visibile su tutti gli elementi interattivi, struttura heading corretta (h1→h2→h3), testo alternativo per immagini, etichette ARIA dove necessario, e skip-to-content link in ogni pagina. Prima di fare commit verificare sempre la conformità AA.
 
+## Struttura layout pagine interne
+Ogni pagina interna dell'applicazione (tool, explorer, ecc.) deve seguire questa struttura:
+- **Sidebar sinistra** (210px, sticky sotto la nav, `top: 64px`, `height: calc(100vh - 64px)`): contiene i controlli contestuali della pagina (es. selezione modello AI, navigazione sezioni). Bordo destro sottile con `color-mix(in srgb, var(--md-outline) 20%, transparent)`.
+- **Main content** (`flex-1`, `min-w-0`): padding `px-10 pt-24 pb-32`, `max-w` appropriato al contenuto. Intestazione con chip tipo + titolo h1 + descrizione, poi il contenuto.
+
+Riferimento: `app/design-system/page.tsx` e `app/tools/ux-reviewer/page.tsx`.
+
 ## UX Reviewer — analisi AS IS / TO BE
 Quando l'immagine caricata contiene sia uno stato AS IS che uno stato TO BE:
 - Le specifiche (UI Update e Screen Reader) devono essere scritte **esclusivamente per il TO BE**
