@@ -278,6 +278,7 @@ export default function UXAccessibilityReviewer() {
   const [usedModel, setUsedModel] = useState<ModelId | null>(null);
   const [modalOpen, setModalOpen] = useState<ModalType>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   // Cycle through loading steps
   useEffect(() => {
@@ -343,6 +344,8 @@ export default function UXAccessibilityReviewer() {
       setAnalysis(data);
       setImage(null);
       if (inputRef.current) inputRef.current.value = "";
+      // #11 — move focus to results panel after analysis
+      setTimeout(() => resultsRef.current?.focus(), 100);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Analysis failed. Please try again.");
     } finally {
@@ -379,7 +382,7 @@ export default function UXAccessibilityReviewer() {
 
   return (
     <>
-      <div className="flex" style={{ backgroundColor: "var(--md-background)", height: "calc(100vh - 64px)", overflow: "hidden" }}>
+      <div className="flex" style={{ backgroundColor: "var(--md-background)", marginTop: 64, height: "calc(100vh - 64px)", overflow: "hidden" }}>
 
         {/* ── Left sidebar: model selector ───────────────────────────────── */}
         <motion.aside
@@ -401,7 +404,7 @@ export default function UXAccessibilityReviewer() {
               <p className="text-xs font-semibold tracking-widest" style={{ color: "var(--md-on-surface-variant)", letterSpacing: "0.1em" }}>
                 AI MODEL
               </p>
-              <p className="text-xs leading-relaxed" style={{ color: "var(--md-on-surface-variant)", opacity: 0.75 }}>
+              <p className="text-xs leading-relaxed" style={{ color: "var(--md-on-surface-variant)" }}>
                 I&apos;ll send the screenshot to Claude. Sonnet is more thorough; Haiku is faster.
               </p>
             </div>
@@ -455,7 +458,7 @@ export default function UXAccessibilityReviewer() {
           style={{ height: "100%", overflow: "hidden" }}
           tabIndex={-1}
         >
-          <div className="flex flex-col h-full px-10 pt-8 pb-0">
+          <div className="flex flex-col h-full px-10 pt-8 pb-4" style={{ maxWidth: 720 }}>
 
             {/* Badge */}
             <motion.div
@@ -603,7 +606,7 @@ export default function UXAccessibilityReviewer() {
                     transition: "all var(--md-duration-short) var(--md-easing-standard)",
                   }}
                   onClick={() => inputRef.current?.click()}
-                  onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
+                  onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && inputRef.current?.click()}
                   onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
                   onDragLeave={() => setDragging(false)}
                   onDrop={handleDrop}
@@ -623,7 +626,7 @@ export default function UXAccessibilityReviewer() {
                     <p className="text-sm mt-1" style={{ color: "var(--md-on-surface-variant)" }}>
                       PNG, JPG, or WebP — up to 4 MB.{" "}
                       Or press{" "}
-                      <kbd className="px-1.5 py-0.5 text-xs" style={{ border: "1px solid var(--md-outline)", borderRadius: 4, fontFamily: "monospace", color: "var(--md-on-surface-variant)" }}>
+                      <kbd aria-hidden="true" className="px-1.5 py-0.5 text-xs" style={{ border: "1px solid var(--md-outline)", borderRadius: 4, fontFamily: "monospace", color: "var(--md-on-surface-variant)" }}>
                         Enter
                       </kbd>{" "}
                       to browse.
@@ -732,7 +735,11 @@ export default function UXAccessibilityReviewer() {
         <AnimatePresence>
           {analysis && (
             <motion.aside
+              ref={resultsRef}
+              tabIndex={-1}
               aria-label="Analysis results"
+              aria-live="polite"
+              aria-atomic="false"
               className="hidden md:flex flex-col gap-4 shrink-0"
               style={{
                 width: 280,
@@ -823,24 +830,62 @@ export default function UXAccessibilityReviewer() {
                 </button>
               )}
 
-              {/* New analysis prompt */}
+              {/* Download CTA */}
               <div className="mt-2 pt-3" style={{ borderTop: "1px solid color-mix(in srgb, var(--md-outline) 15%, transparent)" }}>
                 <p className="text-xs mb-3" style={{ color: "var(--md-on-surface-variant)", opacity: 0.7 }}>
-                  Run another analysis on a different screenshot.
+                  Export both lists as a single text file.
                 </p>
                 <button
-                  onClick={() => inputRef.current?.click()}
-                  className="md-interactive inline-flex items-center gap-2 px-4 py-2 text-xs font-medium w-full justify-center"
+                  onClick={() => {
+                    const uiLines = analysis.ui_update
+                      .map((item, i) => `${i + 1}. ${item}`)
+                      .join("\n");
+                    const srLines = analysis.screen_reader
+                      .map((s) =>
+                        `${s.section}\n` +
+                        s.items.map((item) =>
+                          [`  ${item.index} — ${item.element}: "${item.announcement}"`,
+                           ...item.states.map((st) => `     ${st}`),
+                           ...item.live.map((l) => `     ${l}`),
+                          ].join("\n")
+                        ).join("\n")
+                      ).join("\n\n");
+                    const modelLabel = MODELS.find((m) => m.id === usedModel)?.label ?? "";
+                    const content = [
+                      `UX Accessibility Review`,
+                      `Generated with Claude ${modelLabel}`,
+                      ``,
+                      `━━━ UI UPDATE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+                      ``,
+                      uiLines,
+                      ``,
+                      `━━━ SCREEN READER MAP ━━━━━━━━━━━━━━━━━━━━━━━━━`,
+                      ``,
+                      srLines,
+                    ].join("\n");
+                    const blob = new Blob([content], { type: "text/plain" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "accessibility-review.txt";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="md-interactive inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium w-full justify-center"
                   style={{
-                    backgroundColor: "transparent",
-                    color: "var(--md-on-surface-variant)",
+                    backgroundColor: "var(--md-primary-container)",
+                    color: "var(--md-on-primary-container)",
                     borderRadius: "var(--md-shape-full)",
-                    border: "1.5px solid color-mix(in srgb, var(--md-outline) 50%, transparent)",
-                    minHeight: 40,
+                    border: "none",
+                    minHeight: 44,
                     cursor: "pointer",
                   }}
                 >
-                  Upload new screenshot
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M12 16l-4-4h2.5V4h3v8H16l-4 4Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                    <path d="M4 20h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  Download report
                 </button>
               </div>
             </motion.aside>
