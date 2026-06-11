@@ -4,6 +4,34 @@ import { NextRequest, NextResponse } from "next/server";
 // Extend Vercel function timeout to 60s (default is 10s on hobby plan)
 export const maxDuration = 60;
 
+// ─── Rate limiting ────────────────────────────────────────────────────────────
+// In-memory store: works per-instance (good enough for Vercel hobby plan).
+// 10 requests per IP per 60 seconds.
+const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const ipTimestamps = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_MS;
+  const timestamps = (ipTimestamps.get(ip) ?? []).filter((t) => t > windowStart);
+  if (timestamps.length >= RATE_LIMIT_MAX) return true;
+  timestamps.push(now);
+  ipTimestamps.set(ip, timestamps);
+  return false;
+}
+
+// ─── Input validation ─────────────────────────────────────────────────────────
+const ALLOWED_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
+
+// 4 MB expressed as base64 character count (~4/3 overhead)
+const MAX_BASE64_CHARS = Math.ceil((4 * 1024 * 1024 * 4) / 3);
+
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
@@ -65,9 +93,23 @@ Rules for screen reader items:
 - Keep states and live as empty arrays [] when not applicable`;
 
 export async function POST(request: NextRequest) {
+  // ── Rate limit ────────────────────────────────────────────────────────────
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    request.headers.get("x-real-ip") ??
+    "unknown";
+
+  if (isRateLimited(ip)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a minute and try again." },
+      { status: 429 }
+    );
+  }
+
   try {
     const { imageBase64, mediaType, model } = await request.json();
 
+    // ── Input validation ────────────────────────────────────────────────────
     if (!imageBase64 || !mediaType) {
       return NextResponse.json(
         { error: "Image missing." },
@@ -75,6 +117,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!ALLOWED_MIME_TYPES.has(mediaType)) {
+      return NextResponse.json(
+        { error: "Unsupported file type. Please upload a PNG, JPG, WebP, or GIF." },
+        { status: 415 }
+      );
+    }
+
+    if (typeof imageBase64 !== "string" || imageBase64.length > MAX_BASE64_CHARS) {
+      return NextResponse.json(
+        { error: "File too large. Please upload an image under 4 MB." },
+        { status: 413 }
+      );
+    }
+
+    // ── Model selection (server-side whitelist) ─────────────────────────────
     const ALLOWED_MODELS = ["claude-sonnet-4-5", "claude-haiku-4-5-20251001"];
     const selectedModel = ALLOWED_MODELS.includes(model) ? model : "claude-sonnet-4-5";
 
@@ -106,7 +163,6 @@ export async function POST(request: NextRequest) {
     const text = response.content[0].type === "text" ? response.content[0].text : "";
     let analysis;
     try {
-      // Estrai solo il blocco JSON dalla risposta, ignorando eventuale testo extra
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error("No JSON found in response.");
       analysis = JSON.parse(jsonMatch[0]);
